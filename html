@@ -1,0 +1,90 @@
+from pptx import Presentation
+from pptx.util import Inches, Pt
+from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN
+
+# Criação da apresentação em widescreen (16:9)
+prs = Presentation()
+prs.slide_width = Inches(13.33)
+prs.slide_height = Inches(7.5)
+
+# Cores oficiais do Sicoob
+verde_escuro = RGBColor(0, 77, 64)
+verde_claro = RGBColor(139, 195, 74)
+
+# Função para adicionar slides com título e texto
+def add_slide(title, content):
+    slide_layout = prs.slide_layouts[1]
+    slide = prs.slides.add_slide(slide_layout)
+    title_placeholder = slide.shapes.title
+    content_placeholder = slide.placeholders[1]
+
+    # Estilo do título
+    title_placeholder.text = title
+    title_shape = title_placeholder.text_frame
+    title_shape.paragraphs[0].font.bold = True
+    title_shape.paragraphs[0].font.size = Pt(36)
+    title_shape.paragraphs[0].font.color.rgb = verde_escuro
+
+    # Estilo do conteúdo
+    content_placeholder.text = content
+    for paragraph in content_placeholder.text_frame.paragraphs:
+        paragraph.font.size = Pt(20)
+        paragraph.font.color.rgb = RGBColor(60, 60, 60)
+
+# Slide 1 – Capa
+slide_capa = prs.slides.add_slide(prs.slide_layouts[6])
+title_box = slide_capa.shapes.add_textbox(Inches(2), Inches(2.5), Inches(9), Inches(2))
+title_tf = title_box.text_frame
+title_run = title_tf.add_paragraph()
+title_run.text = "Cooperativa de Crédito Sicoob"
+title_run.font.size = Pt(54)
+title_run.font.bold = True
+title_run.font.color.rgb = verde_escuro
+title_tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+subtitle_box = slide_capa.shapes.add_textbox(Inches(2), Inches(4.2), Inches(9), Inches(1))
+subtitle_tf = subtitle_box.text_frame
+subtitle_run = subtitle_tf.add_paragraph()
+subtitle_run.text = "Apresentado por Jonatas Emanuel"
+subtitle_run.font.size = Pt(28)
+subtitle_run.font.color.rgb = verde_claro
+subtitle_tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+# Demais slides com conteúdo
+slides_info = [
+    ("Introdução ao Sicoob",
+     "O Sicoob é uma das maiores cooperativas financeiras do Brasil. "
+     "Seu objetivo é oferecer serviços bancários tradicionais com foco no cooperativismo, "
+     "onde os lucros retornam aos cooperados e à comunidade."),
+    ("Desenvolvimento do Sicoob",
+     "Desde sua fundação, o Sicoob cresceu significativamente, expandindo-se para todo o país. "
+     "Investiu em tecnologia, aplicativos, internet banking e serviços digitais para facilitar o acesso dos cooperados."),
+    ("Desafios Enfrentados",
+     "• Concorrência com bancos e fintechs.\n"
+     "• Atração de novos cooperados jovens.\n"
+     "• Manter a essência cooperativista.\n"
+     "• Segurança digital e inovação constante."),
+    ("Programas e Recursos",
+     "O Sicoob oferece educação financeira, crédito para produtores rurais e pequenos empreendedores, "
+     "aplicativo móvel, Pix e programas de sustentabilidade e inclusão social."),
+    ("Estrutura Organizacional",
+     "Formado por cooperativas singulares e centrais, com coordenação da Confederação Sicoob e o Banco Sicoob. "
+     "A governança é democrática: cada cooperado tem direito a um voto."),
+    ("Sede Principal",
+     "Localizada em Brasília (DF), a sede nacional coordena, planeja e integra todas as cooperativas. "
+     "Também abriga setores de inovação, tecnologia e comunicação institucional."),
+    ("Conclusão",
+     "O Sicoob promove o desenvolvimento regional e social, fortalecendo o cooperativismo financeiro. "
+     "Com inovação e valores sólidos, é uma alternativa sustentável ao sistema bancário tradicional.")
+]
+
+for title, content in slides_info:
+    add_slide(title, content)
+
+# Salvar o PowerPoint
+pptx_path = "/mnt/data/Cooperativa_de_Credito_Sicoob.pptx"
+prs.save(pptx_path)
+
+pptx_path
+    
